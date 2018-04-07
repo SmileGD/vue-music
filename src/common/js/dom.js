@@ -14,3 +14,13 @@ export function addClass(el, className) {
 	newClass.push(className);
 	el.className = newClass.join(' ');
 }
+
+// 获取或者设置dom属性
+export function getData(el, name, val) {
+	let prefix = 'data-';
+	if(val) {
+		return el.setAttribute(prefix+name,val);
+	}else {
+		return el.getAttribute(prefix+name);
+	}
+}

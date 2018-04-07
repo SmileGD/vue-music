@@ -10,13 +10,12 @@ export function getRecommend() {
 		uin: 0,
 		needNewCode: 1
 	})
-	return jsonp(url, data, options)
+	return jsonp(url, data, options);
 }
 
 
 export function getDiscList() {
 	const url = '/api/getDiscList';
-
 	const data = Object.assign({}, commonParams, {
 		platform: 'yqq',
 		hostUin: 0,
