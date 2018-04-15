@@ -5,12 +5,21 @@
 		</div>
 		<h1 class="title" v-html="title"></h1>
 		<div class="bg-image" :style="bgStyle" ref="bgImage">
+			<div class="play-wrapper" ref="playBtn">
+				<div class="play">
+					<i class="icon-play"></i>
+					<span class="text">随机播放全部</span>
+				</div>
+			</div>
 			<div class="filter" ref="filter"></div>
 		</div>
 		<div class="bg-layer" ref="layer"></div>
 		<scroll :probe-type="probeType" :listen-scroll="listenScroll" :data="songs" @scroll="scroll" class="list" ref="list">
 			<div class="song-list-wrapper">
-				<song-list :songs="songs"></song-list>
+				<song-list @select="selectItem" :songs="songs"></song-list>
+			</div>
+			<div class="loading-wrapper" v-show="!songs.length">
+				<loading></loading>
 			</div>
 		</scroll>
 	</div>
@@ -19,13 +28,20 @@
 <script type="text/javascript">
 	import Scroll from 'base/scroll/scroll';
 	import songList from 'base/song-list/song-list';
+	import loading from 'base/loading/loading';
+	import {prefixStyle} from 'common/js/dom.js';
+
+	import {mapActions} from 'vuex';
 
 	const RESERVED_HEIGHT = 40;
+	const transform = prefixStyle('transform');
+	const backdrop = prefixStyle('backdrop-filter');
 
 	export default {
 		components: {
 			Scroll,
-			songList
+			songList,
+			loading
 		},
 
 		props: {
@@ -62,7 +78,18 @@
 
 			scroll(pos) {
 				this.scrollY = pos.y;
-			}
+			},
+
+			selectItem(item, index) {
+				this.selectPlay({
+					list: this.songs,
+					index: index
+				})
+			},
+
+			...mapActions([
+				'selectPlay'
+				])
 		},
 
 		watch: {
@@ -72,28 +99,30 @@
 				let scale = 1;
 				const persent = Math.abs(newY / this.imageHeight);
 				let translateY = Math.max(this.minTransalteY, newY);
-				this.$refs.layer.style['transform'] = `translate3d(0,${translateY}px,0)`;
 
 				if(newY > 0) {
 					scale = 1+persent;
 					zIndex = 10;
 				}else {
-					blur = Math.max(20*persent, 20);
+					blur = Math.min(20*persent, 20);
 				}
 
-				this.$refs.filter.style['backdrop-filter'] = `blur(${blur}px)`;
+				this.$refs.layer.style[transform] = `translate3d(0,${translateY}px,0)`;
+				this.$refs.filter.style[backdrop] = `blur(${blur}px)`;
 
 				if(newY < this.minTransalteY) {
 					zIndex = 10;
 					this.$refs.bgImage.style.paddingTop = 0;
 					this.$refs.bgImage.style.height = `${RESERVED_HEIGHT}px`;
+					this.$refs.playBtn.style.display = 'none';
 				}else {
 					this.$refs.bgImage.style.paddingTop = '70%';
 					this.$refs.bgImage.style.height = 0;
+					this.$refs.playBtn.style.display = '';
 				}
 
 				this.$refs.bgImage.style.zIndex = zIndex;
-				this.$refs.bgImage.style['transform'] = `scale(${scale})`;
+				this.$refs.bgImage.style[transform] = `scale(${scale})`;
 			}
 		},
 
