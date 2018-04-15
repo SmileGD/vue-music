@@ -40,7 +40,7 @@
 
 				<div class="operators">
 					<div class="icon i-left">
-						<i class="icon-sequence"></i>
+						<i :class="iconMode" @click="changeMode"></i>
 					</div>
 					<div class="icon i-left" :class="disableCls">
 						<i class="icon-prev" @click="prev"></i>
@@ -77,7 +77,7 @@
 			</div>
 		</div>
 		</transition>
-		<audio ref="audio" :src="currentSong.url" @canplay="ready" @error="error" @timeupdate="updateTime"></audio>
+		<audio ref="audio" :src="currentSong.url" @canplay="ready" @error="error" @timeupdate="updateTime" @ended="end"></audio>
 	</div>
 </template>
 
@@ -85,6 +85,8 @@
 	import {mapGetters, mapMutations} from 'vuex';
 	import animations from 'create-keyframe-animation';
 	import {prefixStyle} from 'common/js/dom';
+	import {playMode} from 'common/js/config';
+	import {shuffle} from 'common/js/util';
 
 	import progressBar from 'base/progress-bar/progress-bar';
 	import progressCircle from 'base/progress-circle/progress-circle';
@@ -126,12 +128,18 @@
 				return this.currentTime / this.currentSong.duration;
 			},
 
+			iconMode() {
+				return this.mode === playMode.sequence ? 'icon-sequence': this.mode === playMode.loop ? 'icon-loop' : 'icon-random';
+			},
+
 			...mapGetters([
 				'fullScreen',
 				'playlist',
 				'currentSong',
 				'playing',
-				'currentIndex'
+				'currentIndex',
+				'mode',
+				'sequenceList'
 			])
 		},
 
@@ -251,6 +259,19 @@
 				this.songReady = true;
 			},
 
+			end() {
+				if(this.mode === playMode.loop) {
+					this.loop();
+				}else {
+					this.next();
+				}
+			},
+
+			loop() {
+				this.$refs.audio.currentTime = 0;
+				this.$refs.audio.play();
+			},
+
 			updateTime(e) {
 				this.currentTime = e.target.currentTime;
 			},
@@ -279,15 +300,41 @@
 				}
 			},
 
+			changeMode() {
+				const mode = (this.mode + 1 ) % 3;
+				this.setPlayMode(mode);
+				let list = null;
+				if(mode == playMode.random) {
+					list = shuffle(this.sequenceList);
+				}else {
+					list = this.sequenceList;
+				}
+				this.resetCurrentIndex(list);
+				this.setPlaylist(list);
+			},
+
+			resetCurrentIndex(list) {
+				const index = list.findIndex((item) => {
+					return item.id === this.currentSong.id;
+				})
+				this.setCurrentIndex(index);
+			},
+
 			...mapMutations({
 				setFullScreen: 'SET_FULL_SCREEN',
 				setPlayingState: 'SET_PLAYING_STATE',
-				setCurrentIndex: 'SET_CURRENT_INDEX'
+				setCurrentIndex: 'SET_CURRENT_INDEX',
+				setPlayMode: 'SET_PLAY_MODE',
+				setPlaylist: 'SET_PLAYLIST'
 			})
 		},
 
 		watch: {
-			currentSong() {
+			currentSong(newSong, oldSong) {
+				if(newSong.id === oldSong.id) {
+					return;
+				}
+
 				this.$nextTick(() => {
 					this.$refs.audio.play();
 				})
