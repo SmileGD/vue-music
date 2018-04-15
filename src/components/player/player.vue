@@ -78,6 +78,8 @@
 		</div>
 		</transition>
 		<audio ref="audio" :src="currentSong.url" @canplay="ready" @error="error" @timeupdate="updateTime" @ended="end"></audio>
+<!-- 			<audio :src="currentSong.url" controls ref="testAudio"></audio>
+			<div @click="test">点我啊~</div> -->
 	</div>
 </template>
 
@@ -147,6 +149,10 @@
 			back() {
 				this.setFullScreen(false);
 			},
+
+			// test() {
+			// 	this.$refs.testAudio.play();
+			// },
 
 			open() {
 				this.setFullScreen(true);
@@ -700,13 +706,21 @@
 				}
 
 				.icon-mini {
-					font-size: 1.6rem;
+					font-size: 32px;
 					position: absolute;
 					left: 0;
 					top: 0;
 				}
 			}
 		}
+	}
+
+	.audio-l {
+		z-index: 999;
+		position: relative;
+		width: 100%;
+		height: 200px;
+		background: #00f;
 	}
 
 	@keyframes rotate {
