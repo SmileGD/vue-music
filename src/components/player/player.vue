@@ -27,6 +27,18 @@
 						</div>
 					</div>
 				</div>
+
+				<scroll class="middle-r" ref="lyricList" :data="currentLyric && currentLyric.lines">
+					<div class="lyric-wrapper">
+						<div v-if="currentLyric">
+							<p ref="lyricLine"
+								class="text"
+								:class="{'current': currentLineNum ===index}"
+								v-for="(line,index) in currentLyric.lines">{{line.txt}}
+								</p>
+						</div>
+					</div>
+				</scroll>
 			</div>
 
 			<div class="bottom">
@@ -78,8 +90,6 @@
 		</div>
 		</transition>
 		<audio ref="audio" :src="currentSong.url" @canplay="ready" @error="error" @timeupdate="updateTime" @ended="end"></audio>
-<!-- 			<audio :src="currentSong.url" controls ref="testAudio"></audio>
-			<div @click="test">点我啊~</div> -->
 	</div>
 </template>
 
@@ -89,33 +99,39 @@
 	import {prefixStyle} from 'common/js/dom';
 	import {playMode} from 'common/js/config';
 	import {shuffle} from 'common/js/util';
+	import Lyric from 'lyric-parser';
 
 	import progressBar from 'base/progress-bar/progress-bar';
 	import progressCircle from 'base/progress-circle/progress-circle';
+	import scroll from 'base/scroll/scroll';
+
 
 	const transform = prefixStyle('transform');
 
 	export default {
 		components: {
 			progressBar,
-			progressCircle
+			progressCircle,
+			scroll
 		},
 
 		data() {
 			return {
 				songReady: false,
 				currentTime: 0,
-				radius: 32
+				radius: 32,
+				currentLyric: null,
+				currentLineNum: 0
 			}
 		},
 
 		computed: {
 			playIcon() {
-				return this.playing ? 'icon-play' : 'icon-pause';
+				return this.playing ? 'icon-pause' : 'icon-play';
 			},
 
 			miniIcon() {
-				return this.playing ? 'icon-play-mini' : 'icon-pause-mini';
+				return this.playing ? 'icon-pause-mini' : 'icon-play-mini';
 			},
 
 			cdCls() {
@@ -149,10 +165,6 @@
 			back() {
 				this.setFullScreen(false);
 			},
-
-			// test() {
-			// 	this.$refs.testAudio.play();
-			// },
 
 			open() {
 				this.setFullScreen(true);
@@ -326,6 +338,25 @@
 				this.setCurrentIndex(index);
 			},
 
+			getLyric() {
+				this.currentSong.getLyric().then((lyric) => {
+					this.currentLyric = new Lyric(lyric, this.handleLyric);
+					if(this.playing) {
+						this.currentLyric.play();
+					}
+				})
+			},
+
+			handleLyric({lineNum, txt}) {
+					this.currentLineNum = lineNum;
+					if(lineNum > 5) {
+						let lineEl = this.$refs.lyricLine[lineNum - 5];
+						this.$refs.lyricList.scrollToElement(lineEl, 1000);
+					}else {
+						this.$refs.lyricList.scrollTo(0, 0, 1000);
+					}
+			},
+
 			...mapMutations({
 				setFullScreen: 'SET_FULL_SCREEN',
 				setPlayingState: 'SET_PLAYING_STATE',
@@ -343,6 +374,7 @@
 
 				this.$nextTick(() => {
 					this.$refs.audio.play();
+					this.getLyric();
 				})
 			},
 

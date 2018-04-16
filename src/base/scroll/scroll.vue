@@ -57,7 +57,7 @@
 				this.scroll && this.scroll.refresh();
 			},
 
-			scollTo() {
+			scrollTo() {
 				this.scroll && this.scroll.scrollTo.apply(this.scroll,arguments);
 			},
 
