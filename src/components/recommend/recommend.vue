@@ -39,8 +39,10 @@ import Scroll from 'base/scroll/scroll';
 import Loading from 'base/loading/loading';
 import { getRecommend, getDiscList} from 'api/getRecommend';
 import {ERR_OK} from 'api/config';
+import {playlistMixin} from 'common/js/mixin';
 
 export default {
+	mixins: [playlistMixin],
 	components: {
 		Slider,
 		Scroll,
@@ -67,7 +69,12 @@ export default {
 					this.discList = res.data.list;
 				}
 			})
-		}
+		},
+		handlePlaylist(playlist) {
+			const bottom = playlist.length > 0 ? '3rem' : '';
+			this.$refs.recommend.style.bottom = bottom;
+			this.$refs.scroll.refresh();
+		},
 	},
 	created(){
 		this._getRecommend();
