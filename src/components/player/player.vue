@@ -270,6 +270,7 @@
 
 			ready() {
 				this.songReady = true;
+				alert(this.songReady);
 			},
 
 			error() {
@@ -396,6 +397,14 @@
 		text-overflow: ellipsis;
 		overflow: hidden;
 		white-space: nowrap;
+	}
+
+	.test {
+		position: relative;
+		z-index: 200;
+		font-size: 1.0rem;
+		height: 2.0rem;
+		color: #ff0;
 	}
 
 	.player {
