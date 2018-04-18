@@ -296,7 +296,6 @@
 
 			ready() {
 				this.songReady = true;
-				alert(this.songReady);
 			},
 
 			error() {
@@ -470,14 +469,15 @@
 					return;
 				}
 
-				if(this.currentLyric) {
+				if (this.currentLyric) {
 					this.currentLyric.stop();
 				}
-
-				setTimeout(() => {
-					this.$refs.audio.play();
-					this.getLyric();
-				},1000);
+				clearTimeout(this.timer)
+				this.timer = setTimeout(() => {
+					this.$refs.audio.src = newSong.url;
+					this.$refs.audio.play()
+					this.getLyric()
+				}, 1000)
 			},
 
 			playing(newPlaying) {
