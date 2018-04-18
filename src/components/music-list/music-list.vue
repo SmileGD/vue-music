@@ -30,6 +30,7 @@
 	import songList from 'base/song-list/song-list';
 	import loading from 'base/loading/loading';
 	import {prefixStyle} from 'common/js/dom.js';
+	import {playlistMixin} from 'common/js/mixin';
 
 	import {mapActions} from 'vuex';
 
@@ -38,6 +39,7 @@
 	const backdrop = prefixStyle('backdrop-filter');
 
 	export default {
+		mixins: [playlistMixin],
 		components: {
 			Scroll,
 			songList,
@@ -91,6 +93,12 @@
 				this.randomPlay({
 					list: this.songs
 				})
+			},
+
+			handlePlaylist(playlist) {
+				const bottom = playlist.length > 0 ? '3rem' : '';
+				this.$refs.list.$el.style.bottom = bottom;
+				this.$refs.list.refresh();
 			},
 
 			...mapActions([

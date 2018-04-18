@@ -113,6 +113,9 @@
 				}
 				this.scrollY = -this.listHeight[index];
 				this.$refs.listview.scrollToElement(this.$refs.listGroup[index],400);
+			},
+			refresh() {
+				this.$refs.listview.refresh();
 			}
 		},
 
