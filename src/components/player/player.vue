@@ -276,6 +276,9 @@
 						this.togglePlaying();
 					}
 				}
+				if(this.currentLyric) {
+					this.currentLyric.seek(0);
+				}
 				this.songReady = false;
 			},
 
@@ -294,6 +297,9 @@
 					if(!this.playing) {
 						this.togglePlaying();
 					}
+				}
+				if(this.currentLyric) {
+					this.currentLyric.seek(0);
 				}
 				this.songReady = false;
 			},
@@ -473,7 +479,7 @@
 					return;
 				}
 
-				if(this.currentLyric) {
+				if (this.currentLyric) {
 					this.currentLyric.stop();
 					this.currentTime = 0;
 					this.playingLyric = '';
