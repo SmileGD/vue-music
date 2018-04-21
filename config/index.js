@@ -6,17 +6,16 @@ const path = require('path')
 
 module.exports = {
 	dev: {
-
 		// Paths
 		assetsSubDirectory: 'static',
 		assetsPublicPath: '/',
 		proxyTable: {
 			// qq音乐歌单数据代理获取
 			'/api/getDiscList': {
-				target:'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg',
+				target: 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg',
 				bypass: function(req,res,proxyOptions){
-					req.headers.referer = "https://c.y.qq.com",
-					req.headers.host = 'c.y.qq.com'
+					req.headers.referer = 'https://c.y.qq.com';
+					req.headers.host = 'c.y.qq.com';
 				},
 				pathRewrite: {
 					'^/api/getDiscList': ''
@@ -26,11 +25,22 @@ module.exports = {
 			'/api/lyric': {
 				target: 'https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg',
 				bypass: function(req,res,proxyOptions){
-					req.headers.referer = "https://c.y.qq.com",
-					req.headers.host = 'c.y.qq.com'
+					req.headers.referer = 'https://c.y.qq.com';
+					req.headers.host = 'c.y.qq.com';
 				},
 				pathRewrite: {
 					'^/api/lyric': ''
+				}
+			},
+			// qq音乐歌单详情数据代理获取
+			'/api/getSongList': {
+				target: 'https://c.y.qq.com/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg',
+				bypass: function(req,res,proxyOptions){
+					req.headers.referer = 'https://c.y.qq.com';
+					req.headers.host = 'c.y.qq.com';
+				},
+				pathRewrite: {
+					'^/api/getSongList': ''
 				}
 			}
 		},

@@ -75,7 +75,7 @@
 						<i class="icon-next" @click="next"></i>
 					</div>
 					<div class="icon i-right">
-						<i class="icon icon-not-favorite"></i>
+						<i class="icon icon-not-favorite" @click="playByHand"></i>
 					</div>
 				</div>
 			</div>
@@ -176,6 +176,10 @@
 		},
 
 		methods: {
+			playByHand() {
+				this.$refs.audio.play();
+			},
+
 			back() {
 				this.setFullScreen(false);
 			},
@@ -471,9 +475,12 @@
 
 				if(this.currentLyric) {
 					this.currentLyric.stop();
+					this.currentTime = 0;
+					this.playingLyric = '';
+					this.currentLineNum = 0;
 				}
-
-				setTimeout(() => {
+				clearTimeout(this.timer)
+				this.timer = setTimeout(() => {
 					this.$refs.audio.play();
 					this.getLyric();
 				},1000);

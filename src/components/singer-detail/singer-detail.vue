@@ -30,7 +30,7 @@
 			...mapGetters([
 				// 对应getters.js中的singer
 				'singer'
-				])
+			])
 		},
 
 		methods: {

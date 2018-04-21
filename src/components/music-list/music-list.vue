@@ -16,7 +16,7 @@
 		<div class="bg-layer" ref="layer"></div>
 		<scroll :probe-type="probeType" :listen-scroll="listenScroll" :data="songs" @scroll="scroll" class="list" ref="list">
 			<div class="song-list-wrapper">
-				<song-list @select="selectItem" :songs="songs"></song-list>
+				<song-list @select="selectItem" :songs="songs" :rank="rank"></song-list>
 			</div>
 			<div class="loading-wrapper" v-show="!songs.length">
 				<loading></loading>
@@ -58,6 +58,10 @@
 			title: {
 				type: String,
 				default: ''
+			},
+			rank: {
+				type: Boolean,
+				default: false
 			}
 		},
 
@@ -149,7 +153,7 @@
 		mounted() {
 			this.imageHeight = this.$refs.bgImage.clientHeight;
 			this.minTransalteY = -this.imageHeight + RESERVED_HEIGHT;
-			this.$refs.list.$el.style.top = `${this.imageHeight}px`
+			this.$refs.list.$el.style.top = `${this.imageHeight}px`;
 		}
 	}
 </script>
