@@ -102,6 +102,10 @@
 				this.$emit('listScroll');
 			},
 
+			refresh() {
+				this.$refs.suggest.refresh();
+			},
+
 			genResult(data) {
 				let ret = [];
 				if(data.zhida && data.zhida.singerid) {
@@ -152,6 +156,7 @@
 				}else {
 					this.insertSong(item);
 				}
+				this.$emit('select');
 			},
 
 			...mapMutations({
