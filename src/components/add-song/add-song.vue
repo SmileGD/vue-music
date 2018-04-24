@@ -11,7 +11,7 @@
 				<search-box @query="onQueryChange" ref="searchBox" placeholder="搜索歌曲"></search-box>
 			</div>
 			<div class="shortcut" v-show="!query">
-				<switches :switches="switches"></switches>
+				<switches :switches="switches" :currentIndex="currentIndex" @switch="switchItem"></switches>
 <!-- 				<div class="list-wrapper">
 					<scroll ref="songList" class="list-scroll">
 						<div class="list-inner">
@@ -62,7 +62,8 @@
 				switches: [
 					{name: '最近播放'},
 					{name: '搜索历史'}
-				]
+				],
+				currentIndex: 0
 			}
 		},
 
@@ -75,6 +76,9 @@
 			},
 			selectSuggest() {
 				this.saveSearch();
+			},
+			switchItem(index) {
+				this.currentIndex = index;
 			}
 		}
 	}
