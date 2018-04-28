@@ -32,6 +32,10 @@
 			beforeScroll: {
 				type: Boolean,
 				default: false
+			},
+			refreshDelay: {
+				type: Number,
+				default: 20
 			}
 		},
 
@@ -99,7 +103,7 @@
 		mounted() {
 			setTimeout(() => {
 				this._initBScroll();
-			},20)
+			},this.refreshDelay);
 		}
 	}
 </script>

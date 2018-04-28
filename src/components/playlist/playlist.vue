@@ -11,7 +11,7 @@
 						</span>
 					</h1>
 				</div>
-				<scroll ref="listContent" class="list-content">
+				<scroll ref="listContent" :refreshDelay="refreshDelay" class="list-content">
 					<transition-group ref="list" name="list" tag="ul">
 						<li :key="item.id" class="item" @click="selectItem(item,index)" v-for="(item,index) in sequenceList" ref="listItem">
 							<i class="current" :class="getCurrentIcon(item)"></i>
@@ -44,7 +44,7 @@
 <script type="text/ecmascript-6">
 	import Scroll from 'base/scroll/scroll';
 	import Confirm from 'base/confirm/confirm';
-	import AddSong from 'components/add-song/add-song';
+	import AddSong from 'components/add-song/add-song'; 
 
 	import {mapActions} from 'vuex';
 	import {playMode} from 'common/js/config';
@@ -60,7 +60,8 @@
 
 		data() {
 			return {
-				showFlag: false
+				showFlag: false,
+				refreshDelay: 100
 			}
 		},
 
