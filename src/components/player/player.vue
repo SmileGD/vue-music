@@ -74,8 +74,8 @@
 					<div class="icon i-right" :class="disableCls">
 						<i class="icon-next" @click="next"></i>
 					</div>
-					<div class="icon i-right">
-						<i class="icon icon-not-favorite" @click="playByHand"></i>
+					<div class="icon i-right" @>
+						<i class="icon" :class="getFavoriteIcon(currentSong)" @click="toggleFavorite(currentSong)"></i>
 					</div>
 				</div>
 			</div>
@@ -101,7 +101,7 @@
 		</div>
 		</transition>
 		<playlist ref="playlist"></playlist>
-		<audio ref="audio" :src="currentSong.url" @canplay="ready" @error="error" @timeupdate="updateTime" @ended="end"></audio>
+		<audio ref="audio" :src="currentSong.url" @play="ready" @error="error" @timeupdate="updateTime" @ended="end"></audio>
 	</div>
 </template>
 
@@ -172,10 +172,6 @@
 		},
 
 		methods: {
-			playByHand() {
-				this.$refs.audio.play();
-			},
-
 			back() {
 				this.setFullScreen(false);
 			},
@@ -262,6 +258,7 @@
 				}
 				if(this.playlist.length === 1) {
 					this.loop();
+					return;
 				}else {
 					let index = this.currentIndex - 1;
 					if(index == -1) {
@@ -284,6 +281,7 @@
 				}
 				if(this.playlist.length === 1) {
 					this.loop();
+					return;
 				}else {
 					let index = this.currentIndex + 1;
 					if(index == this.playlist.lenghth) {
@@ -361,6 +359,9 @@
 
 			getLyric() {
 				this.currentSong.getLyric().then((lyric) => {
+					if(this.currentSong.lyric !== lyric) {
+						return;
+					}
 					this.currentLyric = new Lyric(lyric, this.handleLyric);
 					if(this.playing) {
 						this.currentLyric.play();

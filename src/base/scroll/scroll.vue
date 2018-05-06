@@ -95,7 +95,7 @@
 		watch: {
 			data() {
 				setTimeout(() => {
-					this._initBScroll();
+					this.refresh();
 				},20)
 			}
 		},

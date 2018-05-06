@@ -6,6 +6,9 @@ const SEARCH_MAX_LENGTH = 15;
 const PLAY_KEY = '_play_';
 const PLAY_MAX_LENGTH = 200;
 
+const FAVORITE_KEY = '_favorite_';
+const FAVORITE_MAX_LENGTH = 200;
+
 function insertArray(arr, val, compare, maxLen) {
 	let index = arr.findIndex(compare);
 	// 如果数组中有该搜索值并且在第一位 则什么都不做
@@ -80,4 +83,27 @@ export const savePlay = function(song) {
 
 export const loadPlay = function() {
 	return storage.get(PLAY_KEY, []);
+}
+
+export const saveFavorite = function(song) {
+	let songs = storage.get(FAVORITE_KEY, []);
+	insertArray(songs, song, (item) => {
+		return item.id === song.id;
+	}, FAVORITE_MAX_LENGTH);
+	storage.set(FAVORITE_KEY, songs);
+	return songs;
+}
+
+
+export const deleteFavorite = function(song) {
+	let songs = storage.get(FAVORITE_KEY, []);
+	deleteFromArray(songs, (item) => {
+		return item.id === song.id;
+	});
+	storage.set(FAVORITE_KEY, songs);
+	return songs;
+}
+
+export const loadFavorite = function() {
+	return storage.get(FAVORITE_KEY, []);
 }
