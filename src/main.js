@@ -5,8 +5,11 @@ import fastclick from 'fastclick';
 import router from './router';
 import lazyLoad from 'vue-lazyload';
 import store from './store';
-
 import 'common/lesses/index.less';
+
+/* eslint-disable no-unused-vars */
+import vConsole from 'vconsole';
+console.log(123);
 
 Vue.use(lazyLoad,{
 	loading: require('common/image/default.png')
